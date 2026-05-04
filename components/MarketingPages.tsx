@@ -514,25 +514,49 @@ function QuotePage({ projects }: { projects: GalleryProjectView[] }) {
 
 function QuoteForm() {
   const { t } = useLanguage();
-  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [isSending, setIsSending] = useState(false);
+  const [showSentText, setShowSentText] = useState(false);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setStatus("sending");
-    const formData = new FormData(event.currentTarget);
-    const response = await fetch("/api/quotes", { method: "POST", body: formData });
+    const form = event.currentTarget;
+    const formData = new FormData(form);
 
-    if (response.ok) {
-      event.currentTarget.reset();
+    setIsSending(true);
+    setStatus("idle");
+    setShowSentText(false);
+
+    try {
+      const response = await fetch("/api/quotes", { method: "POST", body: formData });
+
+      if (!response.ok) {
+        throw new Error("Quote request failed");
+      }
+
+      form.reset();
       setStatus("success");
-      return;
+      setShowSentText(true);
+      window.setTimeout(() => setShowSentText(false), 3500);
+    } catch {
+      setStatus("error");
+    } finally {
+      setIsSending(false);
     }
-
-    setStatus("error");
   }
 
   return (
     <form onSubmit={onSubmit} className="rounded-lg border border-graphite/10 bg-white p-5 shadow-soft sm:p-7">
+      {status === "success" ? (
+        <div className="mb-6 rounded-lg border border-water/20 bg-water/10 p-4 text-sm font-black leading-6 text-graphite" role="status" aria-live="polite">
+          {t.form.success}
+        </div>
+      ) : null}
+      {status === "error" ? (
+        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm font-black leading-6 text-red-700" role="alert">
+          {t.form.error}
+        </div>
+      ) : null}
       <div className="mb-7 grid gap-2 sm:grid-cols-4">
         {t.form.steps.map((step, index) => (
           <div key={step} className="rounded-lg bg-ceramic p-3">
@@ -567,12 +591,10 @@ function QuoteForm() {
         <span className="label">{t.form.fields.photos}</span>
         <input name="photos" type="file" multiple accept="image/*" className="field file:mr-4 file:rounded-md file:border-0 file:bg-graphite file:px-3 file:py-2 file:text-sm file:font-bold file:text-white" />
       </label>
-      <button type="submit" disabled={status === "sending"} className="focus-ring mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-water px-5 py-4 text-sm font-black text-white transition hover:bg-water/90 disabled:cursor-wait disabled:opacity-70 sm:w-auto">
+      <button type="submit" disabled={isSending} className="focus-ring mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-water px-5 py-4 text-sm font-black text-white transition hover:bg-water/90 disabled:cursor-wait disabled:opacity-70 sm:w-auto">
         <Send size={18} />
-        {status === "sending" ? "..." : t.form.submit}
+        {isSending ? "..." : showSentText ? t.form.sent : t.form.submit}
       </button>
-      {status === "success" ? <p className="mt-4 rounded-lg bg-water/10 p-4 text-sm font-bold text-graphite">{t.form.success}</p> : null}
-      {status === "error" ? <p className="mt-4 rounded-lg bg-red-50 p-4 text-sm font-bold text-red-700">{t.form.error}</p> : null}
     </form>
   );
 }

@@ -162,8 +162,9 @@ export const copy = {
         photos: "Ngarko foto"
       },
       submit: "Dërgo kërkesën",
-      success: "Faleminderit. Kërkesa juaj u dërgua me sukses. Niki Keramik do t'ju kontaktojë për konfirmim.",
-      error: "Kërkesa nuk u dërgua. Ju lutemi provoni përsëri ose shkruani në WhatsApp.",
+      success: "Kërkesa u dërgua me sukses. Niki Keramik do t’ju kontaktojë së shpejti.",
+      error: "Ndodhi një gabim gjatë dërgimit. Ju lutem provoni përsëri ose shkruani në WhatsApp.",
+      sent: "U dërgua me sukses",
       yes: "Po",
       no: "Jo",
       partial: "Pjesërisht / ende jo"
@@ -339,8 +340,9 @@ export const copy = {
         photos: "Dodaj fotografije"
       },
       submit: "Pošalji zahtev",
-      success: "Hvala. Vaš zahtev je uspešno poslat. Niki Keramik će vas kontaktirati radi potvrde.",
-      error: "Zahtev nije poslat. Molimo pokušajte ponovo ili pišite na WhatsApp.",
+      success: "Zahtev je uspešno poslat. Niki Keramik će vas uskoro kontaktirati.",
+      error: "Došlo je do greške prilikom slanja. Molimo pokušajte ponovo ili pišite na WhatsApp.",
+      sent: "Uspešno poslato",
       yes: "Da",
       no: "Ne",
       partial: "Delimično / još ne"
