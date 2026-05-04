@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum QuoteStatus {
+  NEW
+  CONTACTED
+  VISITED
+  OFFER_SENT
+  ACCEPTED
+  REJECTED
+}
+
+enum ProjectCategory {
+  BATHROOM
+  TILED_SINK
+  KITCHEN
+  FLOOR
+  TERRACE
+  YARD
+  STAIRS
+  TECHNICAL
+  POOL
+  OTHER
+}
+
+model QuoteRequest {
+  id             String      @id @default(cuid())
+  name           String
+  phone          String
+  whatsapp       String?
+  location       String
+  workType       String
+  squareMeters   String?
+  desiredDate    DateTime?
+  materialStatus String?
+  description    String
+  photoUrls      String[]    @default([])
+  status         QuoteStatus @default(NEW)
+  notes          String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model GalleryProject {
+  id            String          @id @default(cuid())
+  titleSq       String
+  titleSr       String
+  descriptionSq String
+  descriptionSr String
+  location      String?
+  projectDate   DateTime?
+  category      ProjectCategory @default(BATHROOM)
+  tags          String[]        @default([])
+  imageUrl      String
+  beforeImageUrl String?
+  afterImageUrl  String?
+  featured      Boolean         @default(false)
+  showInHero    Boolean         @default(false)
+  heroOrder     Int             @default(100)
+  priority      Int             @default(100)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  @@index([category])
+  @@index([featured])
+  @@index([showInHero, heroOrder])
+  @@index([priority])
+}

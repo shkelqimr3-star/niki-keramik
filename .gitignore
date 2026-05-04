@@ -1,0 +1,12 @@
+node_modules
+.next
+tsconfig.tsbuildinfo
+.env
+.env.local
+.vercel
+.npm-cache
+.next-local-appdata
+public/uploads/quotes/*
+!public/uploads/quotes/.gitkeep
+public/uploads/gallery/*
+!public/uploads/gallery/.gitkeep
